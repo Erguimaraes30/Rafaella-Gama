@@ -1,4 +1,4 @@
-import{i as e,r as t,t as n}from"./index-CitdFmZn.js";var r=e(t(),1),i=n(),a=2400,o=5,s=2.6,c=7.5,l=.56,u=24,d={focus:0,part:1,none:2},f={dots:0,dashes:.45,lines:1},p={depth:0,along:1,across:2},m=[0,.75,.35],h=[[0,0,0,0],[1.9,-4.6,-.08,2.4],[-1.05,2,.12,4.1]],ee=[1,.5,.55],g=Math.PI/180,_=1/(2*Math.tan(l/2)),v=`#version 300 es
+import{i as e,r as t,t as n}from"./index-Dth1cJrX.js";var r=e(t(),1),i=n(),a=2400,o=5,s=2.6,c=7.5,l=.56,u=24,d={focus:0,part:1,none:2},f={dots:0,dashes:.45,lines:1},p={depth:0,along:1,across:2},m=[0,.75,.35],h=[[0,0,0,0],[1.9,-4.6,-.08,2.4],[-1.05,2,.12,4.1]],ee=[1,.5,.55],g=Math.PI/180,_=1/(2*Math.tan(l/2)),v=`#version 300 es
 precision highp float;
 `,te=`${v}
 ${`
