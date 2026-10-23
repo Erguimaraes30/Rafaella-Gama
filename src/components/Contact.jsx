@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import LogoLoop from './LogoLoop/LogoLoop';
 import { CONTATOS } from '../data/contatos';
+import { DPR_FUNDO } from '../lib/perf';
 
 // Fundo decorativo: chunk próprio, carregado depois do conteúdo principal.
 const MicroSlats = lazy(() => import('./MicroSlats/MicroSlats'));
@@ -47,6 +48,7 @@ export default function Contact() {
             speed={0.35}
             cursorStrength={0.5}
             introDuration={2}
+            maxDpr={DPR_FUNDO}
           />
         </Suspense>
       </div>

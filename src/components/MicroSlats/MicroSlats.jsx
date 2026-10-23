@@ -376,6 +376,7 @@ const MicroSlats = ({
   intro = true,
   introDuration = 1.5,
   paused = false,
+  maxDpr = 2,
   className = '',
   style
 }) => {
@@ -419,7 +420,8 @@ const MicroSlats = ({
       lean,
       intro,
       introDuration,
-      paused
+      paused,
+      maxDpr
     };
     wakeRef.current?.();
   });
@@ -629,7 +631,9 @@ const MicroSlats = ({
     const resize = () => {
       width = Math.max(1, container.clientWidth);
       height = Math.max(1, container.clientHeight);
-      renderer.dpr = Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(PIXEL_BUDGET / (width * height)));
+      // Ajuste do projeto: teto de resolução configurável (o fundo fica sob um véu fosco).
+      const maxDpr = settingsRef.current?.maxDpr ?? 2;
+      renderer.dpr = Math.min(window.devicePixelRatio || 1, maxDpr, Math.sqrt(PIXEL_BUDGET / (width * height)));
       renderer.setSize(width, height);
       buildFluid();
       start();

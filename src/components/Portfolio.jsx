@@ -4,6 +4,7 @@ import ReflectiveCard from './ReflectiveCard/ReflectiveCard';
 import Noise from './Noise/Noise';
 import PortfolioModal from './PortfolioModal';
 import useMatchMedia from '../hooks/useMatchMedia';
+import { DPR_DESTAQUE, DPR_FUNDO, MODESTO } from '../lib/perf';
 import { PORTFOLIO } from '../data/portfolio';
 
 // Fundo decorativo: chunk próprio, carregado depois do conteúdo principal.
@@ -19,6 +20,7 @@ const FIBRA = { pink: '#e0457f', yellow: '#d39b00', blue: '#2f86d4' };
 export default function Portfolio() {
   const [ativo, setAtivo] = useState(0);
   const [montado, setMontado] = useState(false);
+  const [aberto, setAberto] = useState(false);
   const modalRef = useRef(null);
   const mobile = useMatchMedia(MOBILE);
   const [wheelW, setWheelW] = useState(0);
@@ -31,6 +33,14 @@ export default function Portfolio() {
     const ro = new ResizeObserver(([entry]) => setWheelW(entry.contentRect.width));
     ro.observe(wheelRef.current);
     return () => ro.disconnect();
+  }, []);
+
+  // Com o modal aberto por cima, as fibras do fundo pausam (ficam escondidas atrás dele).
+  useEffect(() => {
+    const dialog = modalRef.current;
+    const fechar = () => setAberto(false);
+    dialog.addEventListener('close', fechar);
+    return () => dialog.removeEventListener('close', fechar);
   }, []);
 
   // As capas são leves: pré-carregadas para a troca de categoria ser instantânea.
@@ -57,6 +67,7 @@ export default function Portfolio() {
 
   const abrir = () => {
     setMontado(true);
+    setAberto(true);
     modalRef.current?.showModal();
   };
 
@@ -67,7 +78,9 @@ export default function Portfolio() {
           <GhostFibers
             lightMode
             glowColor={FIBRA[categoria.cor]}
-            threads={mobile ? 48 : 64}
+            threads={MODESTO ? 40 : mobile ? 48 : 64}
+            dpr={DPR_FUNDO}
+            paused={aberto}
             rotation={-14}
             speed={0.35}
             flow={0.3}
@@ -110,7 +123,7 @@ export default function Portfolio() {
             className={`portfolio__card portfolio__card--${categoria.cor}${categoria.logo ? ' portfolio__card--logo' : ''}`}
             onClick={abrir}
           >
-            <ReflectiveCard theme="light" width="100%" height="100%" radius={10} intro={false}>
+            <ReflectiveCard theme="light" width="100%" height="100%" radius={10} intro={false} maxDpr={DPR_DESTAQUE}>
               <img className="portfolio__cover" src={categoria.capa} alt={categoria.nome} />
             </ReflectiveCard>
             <button

@@ -722,6 +722,8 @@ const Lanyard = ({
   breeze = 0.5,
   interactive = true,
   intro = true,
+  maxDpr = 2,
+  antialias = true,
   className = '',
   style
 }) => {
@@ -749,7 +751,9 @@ const Lanyard = ({
     elasticity,
     breeze,
     interactive,
-    intro
+    intro,
+    maxDpr,
+    antialias
   };
 
   useEffect(() => {
@@ -762,7 +766,12 @@ const Lanyard = ({
 
     let renderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      // Ajuste do projeto: suavização de bordas e teto de resolução vêm das props (aparelhos modestos).
+      renderer = new THREE.WebGLRenderer({
+        antialias: settingsRef.current.antialias,
+        alpha: true,
+        powerPreference: 'high-performance'
+      });
     } catch {
       return undefined;
     }
@@ -1249,7 +1258,7 @@ const Lanyard = ({
     const resize = () => {
       view.width = Math.max(1, container.clientWidth);
       view.height = Math.max(1, container.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, settingsRef.current.maxDpr));
       renderer.setSize(view.width, view.height, false);
       apply();
       render();

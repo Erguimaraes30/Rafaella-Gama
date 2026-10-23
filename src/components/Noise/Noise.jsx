@@ -204,7 +204,9 @@ const Noise = ({
     };
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Ajuste do projeto: sem poeira nem riscos, o canvas da poeira não precisa ocupar memória.
+      const s = settingsRef.current;
+      const dpr = s.dust > 0 || s.scratches > 0 ? Math.min(window.devicePixelRatio || 1, 2) : 0;
       width = Math.max(1, root.clientWidth);
       height = Math.max(1, root.clientHeight);
       canvas.width = Math.round(width * dpr);

@@ -578,6 +578,7 @@ const ReflectiveCard = ({
   width = 320,
   height = 500,
   radius = 24,
+  maxDpr = 2,
   className = '',
   style
 }) => {
@@ -606,7 +607,8 @@ const ReflectiveCard = ({
     tiltStrength: clamp(tiltStrength, 0, 30),
     radius: Math.max(0, radius),
     theme: palette === 'light' ? 1 : 0,
-    intro
+    intro,
+    maxDpr
   };
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
@@ -714,7 +716,8 @@ const ReflectiveCard = ({
     const resize = () => {
       size.width = body.offsetWidth;
       size.height = body.offsetHeight;
-      size.scale = Math.min(window.devicePixelRatio || 1, 2);
+      // Ajuste do projeto: teto de resolução configurável (aparelhos modestos).
+      size.scale = Math.min(window.devicePixelRatio || 1, settingsRef.current.maxDpr);
       const w = Math.max(1, Math.round(size.width * size.scale));
       const h = Math.max(1, Math.round(size.height * size.scale));
       if (canvas.width !== w || canvas.height !== h) {

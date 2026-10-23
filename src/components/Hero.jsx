@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import NavLink from './NavLink';
 import { withBase } from '../lib/base';
+import { DPR_DESTAQUE, MODESTO } from '../lib/perf';
 import Noise from './Noise/Noise';
 
 // three.js fica fora do bundle inicial.
@@ -54,7 +55,14 @@ export default function Hero() {
       <div ref={areaRef} className="hero__portrait" role="img" aria-label="Retrato de Rafaella Gama em um crachá">
         {cracha && (
           <Suspense fallback={null}>
-            <Lanyard frontImage={withBase('/retrato-hero.jpg')} cardColor="#fffaf0" strapColor="#ff9ec7" {...cracha} />
+            <Lanyard
+              frontImage={withBase('/retrato-hero.jpg')}
+              cardColor="#fffaf0"
+              strapColor="#ff9ec7"
+              maxDpr={DPR_DESTAQUE}
+              antialias={!MODESTO}
+              {...cracha}
+            />
           </Suspense>
         )}
       </div>

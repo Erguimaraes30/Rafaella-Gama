@@ -882,8 +882,15 @@ a {
   backdrop-filter: blur(4px);
 }
 
+/* Aparelhos modestos: o desfoque sobre o fundo animado custa caro; fica só o escurecimento. */
+[data-desempenho='modesto'] .modal.modal--wide[open]::backdrop {
+  backdrop-filter: none;
+}
+
 .portfolio__carousel {
   height: clamp(26rem, 72svh, 38rem);
+  /* Com muitos slides, os cards escondidos ficam além da borda: corta sem criar área rolável. */
+  overflow-x: clip;
 }
 
 /* Cor da categoria para os cards, as setas e o "x" do modal. */

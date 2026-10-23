@@ -2,6 +2,7 @@ import { lazy, Suspense, useRef } from 'react';
 import ReflectiveCard from './ReflectiveCard/ReflectiveCard';
 import TrajetoriaModal from './TrajetoriaModal';
 import { withBase } from '../lib/base';
+import { DPR_DESTAQUE } from '../lib/perf';
 
 // Fundo decorativo: chunk próprio, carregado depois do conteúdo principal.
 const SoftAurora = lazy(() => import('./SoftAurora/SoftAurora'));
@@ -27,7 +28,7 @@ export default function About() {
       </div>
       <div className="about__layout">
         <div className="about__card">
-          <ReflectiveCard theme="light" width="100%" height="100%" radius={10}>
+          <ReflectiveCard theme="light" width="100%" height="100%" radius={10} maxDpr={DPR_DESTAQUE}>
             <img
               className="about__photo"
               src={withBase('/retratocardsobremim.webp')}
