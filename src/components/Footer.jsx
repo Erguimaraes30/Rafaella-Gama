@@ -8,7 +8,7 @@ export default function Footer() {
 
   return (
     <footer className="footer">
-      <p>© 2026 — feito com curiosidade.</p>
+      <p>© 2026 — fim da matéria · por Rafaella Gama </p>
       <ul className="footer__links">
         <li>
           <button type="button" aria-haspopup="dialog" onClick={() => privacidadeRef.current?.showModal()}>
