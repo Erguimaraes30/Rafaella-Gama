@@ -87,6 +87,21 @@ export const PORTFOLIO = [
         title: 'e.l.f. no Brasil: As marcas internacionais finalmente começaram a valorizar o público brasileiro?',
         href: 'https://emtodolugar.facha.edu.br/2026/09/25/e-l-f-no-brasil-as-marcas-internacionais-finalmente-comecaram-a-valorizar-o-publico-brasileiro/',
         image: withBase('/portfolio/emtodolugar/elfBrasil_beleza.webp')
+      },
+      {
+        title: '‘O Conto da Aia’ e a importância do direito à contracepção',
+        href: 'https://emtodolugar.facha.edu.br/2026/09/24/o-conto-da-aia-e-a-importancia-do-direito-a-contracepcao/',
+        image: withBase('/portfolio/emtodolugar/contodaaia.webp')
+      },
+      {
+        title: 'O limite entre a ficção e a realidade na Bienal do Livro',
+        href: 'https://emtodolugar.facha.edu.br/2026/09/21/o-limite-entre-a-ficcao-e-a-realidade-na-bienal-do-livro/',
+        image: withBase('/portfolio/emtodolugar/bienal.webp')
+      },
+      {
+        title: 'Sete adaptações literárias que você precisa conhecer',
+        href: 'https://emtodolugar.facha.edu.br/2026/09/07/sete-adaptacoes-literarias-que-voce-precisa-conhecer/',
+        image: withBase('/portfolio/emtodolugar/sete-adaptacoes.webp')
       }
     ]
   },

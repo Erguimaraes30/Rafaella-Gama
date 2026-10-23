@@ -729,6 +729,11 @@ const createEngine = (root, track, config, setLayout) => {
 
   const onUp = e => endDrag(e, false);
   const onCancel = e => endDrag(e, true);
+  // Ajuste do projeto: no toque, o ícone tocado recebe a captura implícita do dedo e, quando o loop a
+  // assume, o "lostpointercapture" do ícone sobe até aqui. Só a perda da captura do próprio loop cancela.
+  const onLostCapture = e => {
+    if (e.target === root) endDrag(e, true);
+  };
 
   const onClick = e => {
     if (performance.now() < st.suppressUntil) {
@@ -794,7 +799,7 @@ const createEngine = (root, track, config, setLayout) => {
   root.addEventListener('pointermove', onMove);
   root.addEventListener('pointerup', onUp);
   root.addEventListener('pointercancel', onCancel);
-  root.addEventListener('lostpointercapture', onCancel);
+  root.addEventListener('lostpointercapture', onLostCapture);
   root.addEventListener('click', onClick, true);
   root.addEventListener('dragstart', onDragStart);
   root.addEventListener('focusin', onFocusIn);
@@ -860,7 +865,7 @@ const createEngine = (root, track, config, setLayout) => {
     root.removeEventListener('pointermove', onMove);
     root.removeEventListener('pointerup', onUp);
     root.removeEventListener('pointercancel', onCancel);
-    root.removeEventListener('lostpointercapture', onCancel);
+    root.removeEventListener('lostpointercapture', onLostCapture);
     root.removeEventListener('click', onClick, true);
     root.removeEventListener('dragstart', onDragStart);
     root.removeEventListener('focusin', onFocusIn);
