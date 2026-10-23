@@ -28,7 +28,7 @@ export default function Header() {
       position="right"
       items={ITENS}
       socialItems={REDES}
-      displayItemNumbering
+      displayItemNumbering={false}
       colors={['#ff9ec7', '#fff1a6']}
       accentColor="#d6336c"
       menuButtonColor="#1c1917"
