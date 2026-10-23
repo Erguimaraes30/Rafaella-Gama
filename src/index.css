@@ -1,0 +1,1110 @@
+:root {
+  --cream: #fbf3e4;
+  --ink: #1c1917;
+  --pink: #ff9ec7;
+  --yellow: #fff1a6;
+  --blue: #bfe2ff;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --border: 2px solid var(--ink);
+  --shadow: 5px 5px 0 var(--ink);
+  --radius: 18px;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --max: 1180px;
+  --header-h: 4.5rem; /* espaço reservado para o logo e o botão de menu flutuantes */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  line-height: 1.05;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--yellow);
+  border: var(--border);
+  border-radius: 999px;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Header: só o logo e o botão de menu flutuando; o menu abre como painel lateral (StaggeredMenu). */
+.header.fixed-wrapper {
+  width: 100%; /* 100vw esconderia o botão atrás da barra de rolagem */
+  height: 100dvh;
+  z-index: 50;
+}
+
+.header .staggered-menu-header {
+  padding: 0.85rem var(--gutter);
+}
+
+.header__logo,
+.header .sm-toggle {
+  background: var(--cream);
+  border: var(--border);
+  border-radius: 999px;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.header__logo {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.header__logo span {
+  color: var(--pink);
+  -webkit-text-stroke: 1px var(--ink);
+}
+
+.header .sm-toggle {
+  gap: 0.55rem;
+  padding: 0.65rem 1.05rem;
+  font: 700 1rem/1 var(--font-display);
+}
+
+.header__logo:focus-visible,
+.header .sm-toggle:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.header .staggered-menu-panel {
+  background: var(--cream);
+  border-left: var(--border);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: calc(var(--header-h) + 2.5rem) var(--gutter) 2rem;
+}
+
+.header .staggered-menu-panel,
+.header .sm-prelayers {
+  width: clamp(340px, 42vw, 560px);
+}
+
+.header .sm-panel-item {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-transform: none;
+  white-space: nowrap;
+  padding: 0.08em 1.6em 0.08em 0;
+}
+
+.header .sm-panel-list[data-numbering] .sm-panel-item::after {
+  top: 0.35em;
+  right: 0;
+  font: 600 0.9rem/1 var(--font-body);
+}
+
+.header .sm-panel-item:focus-visible,
+.header .sm-socials-link:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.header .sm-socials-title {
+  font: 700 1rem/1.2 var(--font-display);
+}
+
+.header .sm-socials-link {
+  color: var(--ink);
+  font: 600 1.05rem/1.4 var(--font-body);
+}
+
+@media (max-width: 1024px) {
+  .header .staggered-menu-panel,
+  .header .sm-prelayers {
+    width: 100%;
+  }
+
+  .header .staggered-menu-panel {
+    border-left: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .header__logo {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.95rem;
+  }
+
+  .header .sm-toggle {
+    padding: 0.6rem 0.85rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Botões */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  border: var(--border);
+  border-radius: 999px;
+  background: var(--cream);
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow);
+}
+
+.btn--dark {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: 100svh;
+  padding: calc(var(--header-h) + 2rem) var(--gutter) 3rem;
+  overflow: hidden;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.hero__bg img {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 62%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 62%;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%);
+  mask-image: linear-gradient(90deg, transparent, #000 30%);
+}
+
+/* Véu creme para manter o texto legível sobre a foto. */
+.hero__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(251 243 228 / 0.96) 0%, rgb(251 243 228 / 0.9) 50%, rgb(251 243 228 / 0.4) 100%);
+}
+
+.hero__bg .noise {
+  z-index: 1;
+}
+
+.hero__portrait {
+  position: absolute;
+  inset: var(--header-h) 0 0;
+}
+
+.hero__text {
+  position: relative;
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  pointer-events: none; /* deixa o crachá arrastável por trás do texto */
+}
+
+.hero__text a {
+  pointer-events: auto;
+}
+
+.hero__tag {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+  padding: 0.35rem 0.9rem;
+  background: var(--yellow);
+  border: var(--border);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.hero__title {
+  font-size: clamp(1.9rem, 4.6vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  max-width: 10.5em; /* quebra as frases antes de chegar no crachá */
+}
+
+.hero__line {
+  display: block;
+}
+
+
+.hl {
+  color: inherit;
+  padding: 0 0.06em;
+  background: linear-gradient(transparent 60%, var(--hl) 60% 92%, transparent 92%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.hl--pink {
+  --hl: var(--pink);
+}
+
+.hl--yellow {
+  --hl: var(--yellow);
+}
+
+.hl--blue {
+  --hl: var(--blue);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 860px) {
+  /* Reserva espaço abaixo dos botões para o crachá pender sem cobrir o texto. */
+  .hero {
+    align-items: flex-start;
+    padding-bottom: clamp(19rem, 82vw, 30rem);
+  }
+
+  .hero__bg::after {
+    background: linear-gradient(180deg, rgb(251 243 228 / 0.94) 0%, rgb(251 243 228 / 0.82) 45%, rgb(251 243 228 / 0.4) 100%);
+  }
+
+  .hero__bg img {
+    width: 100%;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+/* Faixa animada */
+.marquee {
+  overflow: hidden;
+  background: var(--pink);
+  border-block: var(--border);
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+
+.marquee__list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+}
+
+.marquee__list li {
+  padding: 0.85rem 0;
+  white-space: nowrap;
+}
+
+.marquee__list li::after {
+  content: '✦';
+  margin: 0 1.5rem;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track {
+    animation: none;
+  }
+}
+
+/* Seções */
+.section {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 7rem) var(--gutter);
+}
+
+.section__title {
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  margin-bottom: 2rem;
+}
+
+/* Contato: ícones em loop sobre o fundo fosco de ondas (mesma paleta do hero). */
+.contact {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: clamp(4rem, 9vw, 7rem);
+}
+
+.contact__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+/* Véu creme: deixa as ondas bem apagadas, só uma textura em movimento. */
+.contact__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(251 243 228 / 0.66);
+}
+
+.contact__loop {
+  padding-block: 1rem;
+}
+
+/* Cada ícone vira um adesivo redondo, todos no mesmo bege do fundo. */
+.contact__icon {
+  display: grid;
+  place-items: center;
+  width: 1em;
+  height: 1em;
+  color: var(--ink);
+  background: #e9dbc1; /* bege das ondas do fundo */
+  border: var(--border);
+  border-radius: 50%;
+  box-shadow: var(--shadow);
+}
+
+.contact__icon svg {
+  width: 48%;
+  height: 48%;
+}
+
+.contact .contact__loop[data-labels] .logoloop__label {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: max(14px, calc(var(--logoloop-logoHeight) * 0.17));
+  font-weight: 700;
+  opacity: 1;
+}
+
+.contact__loop .logoloop__content:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+
+/* Sobre */
+.about {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.about__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.about__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 7rem) var(--gutter);
+}
+
+.about__card {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+}
+
+/* Moldura no estilo adesivo do site em vez da borda metálica. */
+.about__card .reflective-card__body {
+  border: var(--border);
+  box-shadow: var(--shadow);
+}
+
+.about__card .reflective-card__content {
+  padding: 0;
+}
+
+.about__photo {
+  display: block;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.about__inner {
+  max-width: 46rem;
+}
+
+.about__highlight {
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-weight: 800;
+  margin-bottom: 1.75rem;
+}
+
+.about__text {
+  max-width: 65ch;
+  font-size: 1.125rem;
+}
+
+@media (max-width: 860px) {
+  .about__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .about__card {
+    width: min(300px, 100%);
+    justify-self: center;
+  }
+}
+
+.about__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 65ch;
+  margin-top: 2rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--blue);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: 3px 3px 0 var(--ink);
+  color: var(--ink);
+  font: 700 1.1rem var(--font-display);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.about__bar:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow);
+}
+
+.about__bar-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+/* Modal */
+.modal {
+  width: min(560px, calc(100% - 2rem));
+  max-height: calc(100svh - 2rem);
+  padding: 0;
+  background: var(--cream);
+  color: var(--ink);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.modal::backdrop {
+  background: rgb(28 25 23 / 0.5);
+}
+
+.modal__box {
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+.modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal__title {
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+
+.modal__close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  background: var(--yellow);
+  border: var(--border);
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.timeline {
+  margin: 0;
+}
+
+.timeline__item {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid rgb(28 25 23 / 0.2);
+}
+
+.timeline__item dt {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.timeline__item dd {
+  margin: 0;
+}
+
+@media (max-width: 420px) {
+  .timeline__item {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+}
+
+/* Abrir: o adesivo "descola" — sobe, gira de leve e a sombra cresce; os itens entram em sequência.
+   Fechar: volta mais rápido para baixo. */
+@media (prefers-reduced-motion: no-preference) {
+  .modal {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.96) rotate(1deg);
+    box-shadow: 0 0 0 var(--ink);
+    transition:
+      opacity 0.18s ease-in,
+      transform 0.18s ease-in,
+      box-shadow 0.18s ease-in,
+      overlay 0.18s allow-discrete,
+      display 0.18s allow-discrete;
+  }
+
+  .modal[open] {
+    opacity: 1;
+    transform: none;
+    box-shadow: 8px 8px 0 var(--ink);
+    transition:
+      opacity 0.2s ease-out,
+      transform 0.45s cubic-bezier(0.34, 1.45, 0.64, 1),
+      box-shadow 0.45s cubic-bezier(0.34, 1.45, 0.64, 1),
+      overlay 0.45s allow-discrete,
+      display 0.45s allow-discrete;
+  }
+
+  @starting-style {
+    .modal[open] {
+      opacity: 0;
+      transform: translateY(2.5rem) scale(0.9) rotate(-3deg);
+      box-shadow: 0 0 0 var(--ink);
+    }
+  }
+
+  .modal::backdrop {
+    background: rgb(28 25 23 / 0);
+    transition:
+      background-color 0.25s,
+      overlay 0.25s allow-discrete,
+      display 0.25s allow-discrete;
+  }
+
+  .modal[open]::backdrop {
+    background: rgb(28 25 23 / 0.5);
+  }
+
+  @starting-style {
+    .modal[open]::backdrop {
+      background: rgb(28 25 23 / 0);
+    }
+  }
+
+  .modal[open] .timeline__item {
+    animation: timeline-in 0.4s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+    animation-delay: calc(0.15s + var(--i, 0) * 0.05s);
+  }
+
+  @keyframes timeline-in {
+    from {
+      opacity: 0;
+      transform: translateX(-0.75rem);
+    }
+  }
+}
+
+/* Portfólio */
+.portfolio {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-block: var(--border);
+}
+
+/* Fundo: fibras animadas sobre um tom claro da cor da categoria escolhida. */
+.portfolio__bg {
+  --bg: var(--pink);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--bg) var(--mix, 35%), var(--cream));
+  transition: background-color 0.5s ease;
+}
+
+.portfolio__bg--yellow { --bg: var(--yellow); }
+.portfolio__bg--blue { --bg: var(--blue); --mix: 60%; }
+
+/* Véu fosco por cima das fibras (como o creme sobre a foto do hero), com o estático acima dele. */
+.portfolio__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  opacity: 0.55;
+}
+
+.portfolio__bg .noise {
+  z-index: 1;
+}
+
+.portfolio__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) min(400px, 40%);
+  gap: 2rem;
+  align-items: center;
+}
+
+.portfolio__wheel {
+  height: 34rem;
+  /* Avança sobre o espaço entre as colunas para a roda ganhar largura (e fonte). */
+  margin-right: -2rem;
+}
+
+/* Bordas da roda se dissolvem no fundo em vez de cortar as opções num retângulo. */
+.portfolio__wheel .option-wheel {
+  --fade-y: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+  --fade-x: linear-gradient(to right, transparent, #000 1.5rem);
+  -webkit-mask-image: var(--fade-y), var(--fade-x);
+  -webkit-mask-composite: source-in;
+  mask-image: var(--fade-y), var(--fade-x);
+  mask-composite: intersect;
+  /* Só clique e teclado: a página rola normalmente por cima da roda. */
+  cursor: default;
+  touch-action: pan-y;
+}
+
+/* O foco fica no wrapper, já que a máscara da roda cortaria o contorno. */
+.portfolio__wheel:has(.option-wheel:focus-visible) {
+  outline: 3px solid var(--ink);
+  outline-offset: 4px;
+  border-radius: var(--radius);
+}
+
+.portfolio__wheel .option-wheel__item {
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 0.1em 0.15em;
+}
+
+.portfolio__wheel .option-wheel__item--selected {
+  font-weight: 800;
+  background: linear-gradient(transparent 62%, var(--hl) 62% 94%, transparent 94%);
+}
+
+/* Card da categoria: mesmo adesivo do retrato do "Sobre mim", com a borda na cor da opção. */
+.portfolio__card {
+  --card: var(--pink);
+  position: relative;
+  justify-self: center;
+  width: min(400px, 100%);
+  aspect-ratio: 3 / 4;
+  cursor: pointer;
+}
+
+.portfolio__card--yellow { --card: var(--yellow); }
+.portfolio__card--blue { --card: var(--blue); }
+
+.portfolio__card .reflective-card__body {
+  border: 6px solid var(--card);
+  box-shadow: 0 0 0 2px var(--ink), 7px 7px 0 2px var(--ink);
+}
+
+.portfolio__card .reflective-card__content {
+  padding: 0;
+}
+
+.portfolio__cover {
+  display: block;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* Logos inteiros, com o fundo branco estendido até as bordas do card. */
+.portfolio__card--logo .portfolio__cover {
+  object-fit: contain;
+  padding: 14%;
+  background: #fff;
+}
+
+.portfolio__cta {
+  position: absolute;
+  left: 50%;
+  bottom: 1.5rem;
+  z-index: 2;
+  min-height: 44px;
+  padding: 0.6rem 1.4rem;
+  background: var(--card);
+  border: var(--border);
+  border-radius: 999px;
+  box-shadow: 3px 3px 0 var(--ink);
+  color: var(--ink);
+  font: 700 1rem var(--font-display);
+  white-space: nowrap;
+  cursor: pointer;
+  transform: translateX(-50%);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.portfolio__card:hover .portfolio__cta,
+.portfolio__cta:focus-visible {
+  transform: translate(calc(-50% - 2px), -2px);
+  box-shadow: var(--shadow);
+}
+
+.portfolio__cta:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .portfolio__card {
+    animation: portfolio-card-in 0.45s cubic-bezier(0.34, 1.45, 0.64, 1);
+  }
+}
+
+@keyframes portfolio-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.94) rotate(-3deg);
+  }
+}
+
+/* Modal do carrossel: o mesmo .modal do "Minha Trajetória", só mais largo. */
+/* Sem caixa: só título, carrossel, setas, barra de progresso e o "x" sobre a tela escurecida. */
+.modal.modal--wide,
+.modal.modal--wide[open] {
+  width: min(960px, calc(100% - 2rem));
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Sem título visível (o nome da categoria fica só para leitores de tela): o "x" vai para a direita. */
+.modal--wide .modal__head {
+  justify-content: flex-end;
+}
+
+/* Sem a caixa, o fundo escurece e desfoca um pouco mais para o carrossel se destacar. */
+.modal.modal--wide[open]::backdrop {
+  background: rgb(28 25 23 / 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.portfolio__carousel {
+  height: clamp(26rem, 72svh, 38rem);
+}
+
+/* Cor da categoria para os cards, as setas e o "x" do modal. */
+.portfolio__modal { --card: var(--pink); }
+.portfolio__modal--yellow { --card: var(--yellow); }
+.portfolio__modal--blue { --card: var(--blue); }
+
+.portfolio__modal .modal__close {
+  background: var(--card);
+}
+
+.portfolio__carousel .depth-carousel:focus-visible {
+  outline: 3px solid var(--ink);
+}
+
+.portfolio__carousel .depth-carousel__card {
+  background: #fff;
+  border: 5px solid var(--card);
+  box-shadow: 0 0 0 2px var(--ink), 6px 6px 0 2px var(--ink);
+}
+
+.portfolio__carousel .depth-carousel__media {
+  height: 54%;
+  border-bottom: var(--border);
+}
+
+.portfolio__carousel .depth-carousel__title {
+  color: var(--ink);
+  font: 700 1.05rem/1.3 var(--font-display);
+  text-wrap: balance;
+}
+
+/* Com subtítulo, o título vira a chamada da série, sublinhada em rosa. */
+.portfolio__carousel .depth-carousel__title:has(+ .depth-carousel__subtitle) {
+  align-self: flex-start;
+  padding: 0 0.06em;
+  font-size: 1.25rem;
+  background: linear-gradient(transparent 60%, var(--pink) 60% 92%, transparent 92%);
+}
+
+.portfolio__carousel .depth-carousel__subtitle {
+  color: var(--ink);
+  font: 600 0.95rem/1.4 var(--font-body);
+  text-wrap: pretty;
+}
+
+/* Seta discreta indicando que o card abre a matéria. */
+.portfolio__carousel .depth-carousel__link::after {
+  content: '↗';
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.6rem;
+  color: var(--ink);
+  font: 700 1.2rem/1 var(--font-display);
+}
+
+.portfolio__carousel .depth-carousel__link:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: -6px;
+  border-radius: 8px;
+}
+
+.portfolio__carousel .depth-carousel__arrow {
+  width: 44px;
+  height: 44px;
+  background: var(--card);
+  border: var(--border);
+  box-shadow: 3px 3px 0 var(--ink);
+  backdrop-filter: none;
+  color: var(--ink);
+}
+
+.portfolio__carousel .depth-carousel__arrow:hover {
+  background: var(--card);
+  border-color: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+.portfolio__carousel .depth-carousel__arrow--prev { left: 0; }
+.portfolio__carousel .depth-carousel__arrow--next { right: 0; }
+
+.portfolio__carousel .depth-carousel__dots {
+  bottom: 0;
+  background: var(--card);
+  border: var(--border);
+  backdrop-filter: none;
+}
+
+.portfolio__carousel .depth-carousel__dot {
+  background: rgb(28 25 23 / 0.3);
+}
+
+.portfolio__carousel .depth-carousel__dot.is-active {
+  background: var(--ink);
+}
+
+.portfolio__empty {
+  height: 100%;
+  border: 2px dashed rgb(28 25 23 / 0.35);
+  border-radius: calc(var(--radius) - 6px);
+}
+
+@media (max-width: 860px) {
+  .portfolio__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio__wheel {
+    height: 15rem;
+    margin-right: 0;
+  }
+
+  .portfolio__card {
+    width: min(300px, 100%);
+  }
+
+  .portfolio__carousel {
+    height: 27rem;
+  }
+
+  /* O carrossel encolhe os cards no celular; o título compensa para continuar legível. */
+  .portfolio__carousel .depth-carousel__media {
+    height: 36%;
+  }
+
+  .portfolio__carousel .depth-carousel__title {
+    font-size: 1.05rem;
+    -webkit-line-clamp: 12;
+  }
+
+  /* No toque a página continua rolando; a categoria é escolhida tocando nela. */
+  .portfolio__wheel .option-wheel {
+    touch-action: pan-y;
+  }
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 1.75rem var(--gutter);
+  border-top: var(--border);
+  font-size: 0.95rem;
+}
+
+.footer {
+  align-items: center;
+}
+
+.footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer__links button {
+  padding: 0.35rem 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--pink);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.footer__links button:hover {
+  text-decoration-color: var(--ink);
+}
+
+.footer__links button:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Privacidade e termos: modal de leitura, com o título e o "x" sempre à vista. */
+.modal.legal {
+  width: min(680px, calc(100% - 2rem));
+}
+
+.legal__head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  align-items: flex-start;
+  margin: calc(-1 * clamp(1.25rem, 4vw, 2rem)) calc(-1 * clamp(1.25rem, 4vw, 2rem)) 1rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  background: var(--cream);
+  border-bottom: 1px solid rgb(28 25 23 / 0.2);
+}
+
+.legal__date {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+.legal__section {
+  padding: 0.75rem 0;
+}
+
+.legal__section h3 {
+  margin-bottom: 0.4rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.legal__section p {
+  max-width: 62ch;
+  line-height: 1.6;
+}
+
+.legal__section p + p {
+  margin-top: 0.5rem;
+}
