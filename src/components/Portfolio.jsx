@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import OptionWheel from './OptionWheel/OptionWheel';
 import ReflectiveCard from './ReflectiveCard/ReflectiveCard';
-import GhostFibers from './GhostFibers/GhostFibers';
 import Noise from './Noise/Noise';
 import PortfolioModal from './PortfolioModal';
 import useMatchMedia from '../hooks/useMatchMedia';
 import { PORTFOLIO } from '../data/portfolio';
+
+// Fundo decorativo: chunk próprio, carregado depois do conteúdo principal.
+const GhostFibers = lazy(() => import('./GhostFibers/GhostFibers'));
 
 const NOMES = PORTFOLIO.map(c => c.nome);
 const MOBILE = '(max-width: 860px)';
@@ -21,6 +23,8 @@ export default function Portfolio() {
   const mobile = useMatchMedia(MOBILE);
   const [wheelW, setWheelW] = useState(0);
   const wheelRef = useRef(null);
+  const cardRef = useRef(null);
+  const primeiraRef = useRef(true);
   const categoria = PORTFOLIO[ativo];
 
   useEffect(() => {
@@ -28,6 +32,25 @@ export default function Portfolio() {
     ro.observe(wheelRef.current);
     return () => ro.disconnect();
   }, []);
+
+  // As capas são leves: pré-carregadas para a troca de categoria ser instantânea.
+  useEffect(() => {
+    PORTFOLIO.forEach(c => {
+      new Image().src = c.capa;
+    });
+  }, []);
+
+  // O card fica montado (o ReflectiveCard mantém o mesmo WebGL); só a animação de entrada se repete.
+  useEffect(() => {
+    if (primeiraRef.current) {
+      primeiraRef.current = false;
+      return;
+    }
+    const card = cardRef.current;
+    card.style.animation = 'none';
+    void card.offsetWidth;
+    card.style.animation = '';
+  }, [ativo]);
 
   const inset = mobile ? 16 : 24;
   const fontSize = wheelW ? Math.min(2.6, Math.max(0.95, (wheelW - inset - 12) / ROTULO_EM / 16)) : 1;
@@ -40,22 +63,24 @@ export default function Portfolio() {
   return (
     <section id="trabalhos" className="portfolio" aria-labelledby="portfolio-titulo">
       <div className={`portfolio__bg portfolio__bg--${categoria.cor}`} aria-hidden="true">
-        <GhostFibers
-          lightMode
-          glowColor={FIBRA[categoria.cor]}
-          threads={mobile ? 48 : 64}
-          rotation={-14}
-          speed={0.35}
-          flow={0.3}
-          particles={0.4}
-          sparkle={0.3}
-          depthOfField={0.6}
-          brightness={1.1}
-          vignette={0.4}
-          grain={0}
-          hoverEffect="part"
-          pulseOnClick={false}
-        />
+        <Suspense fallback={null}>
+          <GhostFibers
+            lightMode
+            glowColor={FIBRA[categoria.cor]}
+            threads={mobile ? 48 : 64}
+            rotation={-14}
+            speed={0.35}
+            flow={0.3}
+            particles={0.4}
+            sparkle={0.3}
+            depthOfField={0.6}
+            brightness={1.1}
+            vignette={0.4}
+            grain={0}
+            hoverEffect="part"
+            pulseOnClick={false}
+          />
+        </Suspense>
         <Noise opacity={0.14} fps={12} blendMode="soft-light" />
       </div>
       <div className="section portfolio__inner">
@@ -81,7 +106,7 @@ export default function Portfolio() {
             />
           </div>
           <div
-            key={ativo}
+            ref={cardRef}
             className={`portfolio__card portfolio__card--${categoria.cor}${categoria.logo ? ' portfolio__card--logo' : ''}`}
             onClick={abrir}
           >

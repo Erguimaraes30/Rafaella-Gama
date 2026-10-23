@@ -370,8 +370,8 @@ const DepthCarousel = ({
             {item.title ? (
               <>
                 <span className="depth-carousel__media">
-                  <img className="depth-carousel__backdrop" src={item.image} alt="" draggable={false} />
-                  <img className="depth-carousel__img" src={item.image} alt={item.alt || ''} draggable={false} />
+                  <img className="depth-carousel__backdrop" src={item.image} alt="" draggable={false} decoding="async" />
+                  <img className="depth-carousel__img" src={item.image} alt={item.alt || ''} draggable={false} decoding="async" />
                 </span>
                 <span className="depth-carousel__text">
                   <span className="depth-carousel__title">{item.title}</span>
@@ -379,7 +379,7 @@ const DepthCarousel = ({
                 </span>
               </>
             ) : (
-              <img className="depth-carousel__img" src={item.image} alt={item.alt || ''} draggable={false} />
+              <img className="depth-carousel__img" src={item.image} alt={item.alt || ''} draggable={false} decoding="async" />
             )}
             {item.href && (
               <a

@@ -48,7 +48,7 @@ export default function Hero() {
   return (
     <section id="inicio" className="hero">
       <div className="hero__bg" aria-hidden="true">
-        <img src={withBase('/substack-imagem.jpeg')} alt="" />
+        <img src={withBase('/substack-imagem.webp')} alt="" fetchPriority="high" />
         <Noise opacity={0.08} fps={12} blendMode="soft-light" />
       </div>
       <div ref={areaRef} className="hero__portrait" role="img" aria-label="Retrato de Rafaella Gama em um crachá">

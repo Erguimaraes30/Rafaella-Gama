@@ -7,7 +7,7 @@ export const PORTFOLIO = [
   {
     nome: 'Substack',
     cor: 'yellow',
-    capa: withBase('/portfolio/substacklogo.jpg'),
+    capa: withBase('/portfolio/substacklogo.webp'),
     logo: true,
     trabalhos: [
       {
@@ -23,7 +23,7 @@ export const PORTFOLIO = [
       {
         title: 'Não importa quão perfeito o seu relacionamento seja: ele não vai te salvar de você mesma',
         href: 'https://substack.com/@rafwaella/p-202294930',
-        image: withBase('/portfolio/substack/materia3substack.jpg')
+        image: withBase('/portfolio/substack/materia3substack.webp')
       },
       {
         title: 'Nostalgia: a maior vilã da geração Z',
@@ -50,65 +50,65 @@ export const PORTFOLIO = [
   {
     nome: 'Em Todo Lugar',
     cor: 'blue',
-    capa: withBase('/portfolio/logo-emtodolugar.jpg'),
+    capa: withBase('/portfolio/logo-emtodolugar.webp'),
     logo: true,
     trabalhos: [
       {
         title: 'Victoria’s Secret Fashion Show 2026: veja os destaques do desfile',
         href: 'https://emtodolugar.facha.edu.br/2026/10/20/victorias-secret-fashion-show-2026-veja-os-destaques-do-desfile/',
-        image: withBase('/portfolio/emtodolugar/victoriasecretfashionshow_moda.jpg')
+        image: withBase('/portfolio/emtodolugar/victoriasecretfashionshow_moda.webp')
       },
       {
         title: 'Dia do Consumo Consciente: como a geração Z está mudando, aos poucos, a maneira como se consome moda nas redes sociais',
         href: 'https://emtodolugar.facha.edu.br/2026/10/15/dia-do-consumo-consciente-como-a-geracao-z-esta-mudando-aos-poucos-a-maneira-como-se-consome-moda-nas-redes-sociais/',
-        image: withBase('/portfolio/emtodolugar/diadoconsumo_comportamento.jpg')
+        image: withBase('/portfolio/emtodolugar/diadoconsumo_comportamento.webp')
       },
       {
         title: 'De craque de futebol a influencer literário: como um passatempo de Gustavo Scarpa mobilizou torcedores e reacendeu o debate sobre hábitos de leitura no Brasil',
         href: 'https://emtodolugar.facha.edu.br/2026/10/13/de-craque-de-futebol-a-influencer-literario-como-um-passatempo-de-gustavo-scarpa-mobilizou-torcedores-e-reacendeu-o-debate-sobre-habitos-de-leitura-no-brasil/',
-        image: withBase('/portfolio/emtodolugar/scarpa_cultura.jpg')
+        image: withBase('/portfolio/emtodolugar/scarpa_cultura.webp')
       },
       {
         title: 'Victoria’s Secret anuncia atrações do próximo desfile: relembre os shows mais icônicos',
         href: 'https://emtodolugar.facha.edu.br/2026/09/29/victorias-secret-anuncia-atracoes-do-proximo-desfile-relembre-os-shows-mais-iconicos/',
-        image: withBase('/portfolio/emtodolugar/victoriasecretsanuncia.jpg')
+        image: withBase('/portfolio/emtodolugar/victoriasecretsanuncia.webp')
       },
       {
         title: 'Pedro Sampaio, Ricky Martin e as Dallas Cowboys Cheerleaders no half-time show da NFL Brasil',
         href: 'https://emtodolugar.facha.edu.br/2026/09/29/pedro-sampaio-ricky-martin-e-as-dallas-cowboys-cheerleaders-no-half-time-show-da-nfl-brasil/',
-        image: withBase('/portfolio/emtodolugar/pedrosampaio_entretenimento.jpg')
+        image: withBase('/portfolio/emtodolugar/pedrosampaio_entretenimento.webp')
       },
       {
         title: 'Turismo cinematográfico: 8 filmes para inspirar a sua próxima viagem',
         href: 'https://emtodolugar.facha.edu.br/2026/09/27/turismo-cinematografico-8-filmes-para-inspirar-a-sua-proxima-viagem/',
-        image: withBase('/portfolio/emtodolugar/turismocinematografico_cinema.jpg')
+        image: withBase('/portfolio/emtodolugar/turismocinematografico_cinema.webp')
       },
       {
         title: 'e.l.f. no Brasil: As marcas internacionais finalmente começaram a valorizar o público brasileiro?',
         href: 'https://emtodolugar.facha.edu.br/2026/09/25/e-l-f-no-brasil-as-marcas-internacionais-finalmente-comecaram-a-valorizar-o-publico-brasileiro/',
-        image: withBase('/portfolio/emtodolugar/elfBrasil_beleza.jpg')
+        image: withBase('/portfolio/emtodolugar/elfBrasil_beleza.webp')
       }
     ]
   },
-  { nome: 'Além do Hype', cor: 'pink', capa: withBase('/portfolio/logo-alem-do-hype.png'), logo: true,
+  { nome: 'Além do Hype', cor: 'pink', capa: withBase('/portfolio/logo-alem-do-hype.webp'), logo: true,
     trabalhos: [
       {
         title: '#1 Além do Hype',
         subtitle: 'A forma como Lili Reinhart divulgou “A Hipótese do Amor” movimentou as redes sociais',
         href: 'https://emtodolugar.facha.edu.br/2026/09/25/1-alem-do-hype/',
-        image: withBase('/portfolio/alemdohype/materia1alem.jpeg')
+        image: withBase('/portfolio/alemdohype/materia1alem.webp')
       },
       {
         title: '#2 Além do Hype',
         subtitle: 'VMA 2026: confira os destaques da premiação',
         href: 'https://emtodolugar.facha.edu.br/2026/10/02/2-alem-do-hype/',
-        image: withBase('/portfolio/alemdohype/materia2alem.png')
+        image: withBase('/portfolio/alemdohype/materia2alem.webp')
       },
       {
         title: '#3 Além do Hype',
         subtitle: 'Adaptações literárias com elenco confirmado',
         href: 'https://emtodolugar.facha.edu.br/2026/10/09/3-alem-do-hype/',
-        image: withBase('/portfolio/alemdohype/materia3alem.jpeg')
+        image: withBase('/portfolio/alemdohype/materia3alem.webp')
       },
       {
         title: '#4 Além do Hype',
@@ -121,33 +121,33 @@ export const PORTFOLIO = [
   {
     nome: 'Coberturas',
     cor: 'yellow',
-    capa: withBase('/retrato-sobremim.jpeg'),
+    capa: withBase('/retrato-sobremim.webp'),
     trabalhos: [
       {
         title:
           'Cerimônia de posse do auditor fiscal Júlio César Carvalho de Araújo como novo chefe da Alfândega da Receita Federal no Aeroporto Internacional do Rio de Janeiro',
         href: 'https://www.instagram.com/reel/DeICscqv5rI/',
-        image: withBase('/portfolio/coberturas/reportagemmanchete-2.jpeg')
+        image: withBase('/portfolio/coberturas/reportagemmanchete-2.webp')
       },
       {
         title: 'Feira Literária da Magistratura (FLIMAG), realizada no Tribunal de Justiça do Rio de Janeiro.',
         href: 'https://www.instagram.com/reel/DeMlSdAOfDM/',
-        image: withBase('/portfolio/coberturas/reportagemmanchete-1.jpeg')
+        image: withBase('/portfolio/coberturas/reportagemmanchete-1.webp')
       },
       {
         title: 'Academia LED na UniFacha: Os bastidores da cobertura esportiva multiplataforma',
         href: 'https://emtodolugar.facha.edu.br/2026/10/22/academia-led-na-unifacha-os-bastidores-da-cobertura-esportiva-multiplataforma/',
-        image: withBase('/portfolio/coberturas/academialednafacha.jpeg')
+        image: withBase('/portfolio/coberturas/academialednafacha.webp')
       },
       {
         title: 'Social media para o evento Moostra de cinema',
         href: 'https://www.instagram.com/mo.ostra',
-        image: withBase('/portfolio/coberturas/capaCoberturas.jpeg')
+        image: withBase('/portfolio/coberturas/capaCoberturas.webp')
       },
       {
         title: 'Editora do jornal InForme para a matéria Planejamento Gráfico e Visual',
         href: 'https://online.fliphtml5.com/jsyds/dmzc/#p=1',
-        image: withBase('/portfolio/coberturas/editoraJornal.jpeg')
+        image: withBase('/portfolio/coberturas/editoraJornal.webp')
       }
     ]
   }

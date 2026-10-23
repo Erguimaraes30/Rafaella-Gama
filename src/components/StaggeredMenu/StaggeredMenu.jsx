@@ -4,7 +4,7 @@ import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import './StaggeredMenu.css';
 
-// Ajustes do projeto: `logo` aceita qualquer nó (o logotipo em texto), rótulos do botão e do bloco de
+// Ajustes do projeto: `logo` é um nó qualquer (o logotipo em texto) no lugar da imagem, rótulos do botão e do bloco de
 // redes em português, `onItemClick` para a navegação interna, Esc fecha o menu e o painel fica
 // `inert` enquanto fechado (os links não recebem foco escondidos). Links mailto não abrem nova aba.
 
@@ -17,7 +17,6 @@ export const StaggeredMenu = ({
   displayItemNumbering = true,
   className,
   logo,
-  logoUrl = '/src/assets/logos/reactbits-gh-white.svg',
   menuButtonColor = '#fff',
   openMenuButtonColor = '#fff',
   accentColor = '#5227FF',
@@ -396,18 +395,7 @@ export const StaggeredMenu = ({
         })()}
       </div>
       <header className="staggered-menu-header" aria-label={ariaLabel}>
-        <div className="sm-logo">
-          {logo ?? (
-            <img
-              src={logoUrl || '/src/assets/logos/reactbits-gh-white.svg'}
-              alt="Logo"
-              className="sm-logo-img"
-              draggable={false}
-              width={110}
-              height={24}
-            />
-          )}
-        </div>
+        <div className="sm-logo">{logo}</div>
         <button
           ref={toggleBtnRef}
           className="sm-toggle"

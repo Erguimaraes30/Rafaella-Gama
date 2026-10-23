@@ -1,8 +1,10 @@
-import { useRef } from 'react';
+import { lazy, Suspense, useRef } from 'react';
 import ReflectiveCard from './ReflectiveCard/ReflectiveCard';
-import SoftAurora from './SoftAurora/SoftAurora';
 import TrajetoriaModal from './TrajetoriaModal';
 import { withBase } from '../lib/base';
+
+// Fundo decorativo: chunk próprio, carregado depois do conteúdo principal.
+const SoftAurora = lazy(() => import('./SoftAurora/SoftAurora'));
 
 export default function About() {
   const modalRef = useRef(null);
@@ -10,21 +12,29 @@ export default function About() {
   return (
     <section id="sobre" className="about" aria-labelledby="sobre-titulo">
       <div className="about__bg" aria-hidden="true">
-        <SoftAurora
-          lightMode
-          color1="#fff1a6"
-          color2="#fff1a6"
-          spectrum={0}
-          speed={0.4}
-          brightness={1.2}
-          bandSpread={0.55}
-          opacity={1}
-        />
+        <Suspense fallback={null}>
+          <SoftAurora
+            lightMode
+            color1="#fff1a6"
+            color2="#fff1a6"
+            spectrum={0}
+            speed={0.4}
+            brightness={1.2}
+            bandSpread={0.55}
+            opacity={1}
+          />
+        </Suspense>
       </div>
       <div className="about__layout">
         <div className="about__card">
           <ReflectiveCard theme="light" width="100%" height="100%" radius={10}>
-            <img className="about__photo" src={withBase('/retratocardsobremim.jpeg')} alt="Retrato de Rafaella Gama" />
+            <img
+              className="about__photo"
+              src={withBase('/retratocardsobremim.webp')}
+              alt="Retrato de Rafaella Gama"
+              loading="lazy"
+              decoding="async"
+            />
           </ReflectiveCard>
         </div>
         <div className="about__inner">

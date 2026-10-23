@@ -259,7 +259,7 @@ a {
 
 .hero__portrait {
   position: absolute;
-  inset: var(--header-h) 0 0;
+  inset: 0; /* sem barra no topo: a alça do crachá desce desde a borda da tela */
 }
 
 .hero__text {
