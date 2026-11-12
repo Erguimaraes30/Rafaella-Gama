@@ -26,8 +26,6 @@ Só aceita envios de `enzorafael211205@gmail.com` e `sourafagama@gmail.com` (lis
    | `Link` | Resposta curta | ⋮ → Validação de resposta → Texto → URL | sim |
    | `Imagem de capa` | Upload de arquivo | Permitir apenas tipos específicos → Imagem; máx. 1 arquivo; 10 MB | sim |
 
-4. Na pergunta `Imagem de capa`, ⋮ → **Descrição**: `JPG, PNG ou WebP (fotos HEIC do iPhone não
-   funcionam)`.
 
 ### Etapa 2 — criar o token do GitHub
 
@@ -51,6 +49,9 @@ Só aceita envios de `enzorafael211205@gmail.com` e `sourafagama@gmail.com` (lis
    - Propriedade: `GITHUB_TOKEN`
    - Valor: o token que começa com `github_pat_`
 6. Clique em **Salvar propriedades do script**.
+7. No menu da esquerda, ao lado de **Serviços**, clique no **+** → escolha **Drive API** → **Adicionar**.
+   O script usa esse serviço para pedir ao Drive uma versão JPG reduzida da imagem (converte
+   HEIC do iPhone e não guarda a foto original, pesada, no repositório).
 
 ### Etapa 4 — ativar
 
@@ -60,7 +61,13 @@ Só aceita envios de `enzorafael211205@gmail.com` e `sourafagama@gmail.com` (lis
    - Vai aparecer "O Google não verificou este app". É normal, porque o app é seu: clique em
      **Avançado** → **Acessar Portfólio - novos cards (não seguro)** → **Permitir**.
 4. No **Registro de execução**, deve aparecer `Tudo certo: o token acessa Erguimaraes30/Rafaella-Gama.`
-   Se aparecer erro, confira o token (Etapa 3, passo 5).
+   Se aparecer erro, confira o token (Etapa 3, passo 5) e o serviço Drive API (passo 7).
+
+### Atualizar o script
+
+Quando `apps-script/Codigo.gs` mudar no repositório: no editor do Apps Script, apague o conteúdo de
+`Código.gs`, cole o novo, salve (Ctrl+S) e rode **`testarConexao`**. Se o Google pedir autorização
+de novo, aceite como na Etapa 4. O gatilho continua ligado; não precisa rodar `instalar` outra vez.
 
 Pronto. O link do formulário (botão **Enviar** → ícone de link) pode ser salvo nos favoritos.
 
@@ -78,10 +85,11 @@ Pronto. O link do formulário (botão **Enviar** → ícone de link) pode ser sa
   GitHub fora do ar…). Corrija o motivo indicado e envie o formulário de novo. Token vencido: gere um
   novo e troque o valor de `GITHUB_TOKEN` (Etapa 3, passos 5–6).
 - **E-mail do GitHub "Run failed: Novo card do formulário"**: algum envio chegou, mas foi rejeitado
-  (categoria ou link inválido, imagem em formato não suportado como HEIC). Os outros envios são
+  (categoria ou link inválido, imagem corrompida). Os outros envios são
   publicados normalmente. O motivo está no log do passo `processar`, e o envio rejeitado fica em
   `pendentes/rejeitados/`: apague esse arquivo pelo GitHub e envie o formulário de novo, corrigido.
-- **Formato da imagem**: use JPG, PNG ou WebP. Fotos do iPhone em HEIC não são aceitas; ao escolher
-  a foto pelo celular, o iPhone normalmente já converte para JPG.
+- **Formato da imagem**: qualquer foto serve, inclusive HEIC do iPhone; o Drive converte para JPG
+  antes do envio. Se a conversão do Drive não estiver pronta a tempo, vai a foto original, e aí só
+  JPG, PNG ou WebP são aceitos.
 - **Renomeou uma pergunta do formulário?** O script procura as perguntas pelo título exato; volte
   ao nome original ou ajuste `PERGUNTAS` no `Codigo.gs`.

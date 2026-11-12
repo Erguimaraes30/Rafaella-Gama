@@ -13,6 +13,9 @@ const PERGUNTAS = {
   link: 'Link',
   imagem: 'Imagem de capa'
 };
+// A imagem vai como JPG de até este lado (o site usa até 1000px). Converte HEIC do iPhone e evita
+// guardar a foto original, pesada, no histórico do repositório.
+const LADO_ENVIO = 1600;
 
 // Rodar uma vez, pelo editor, para ligar o gatilho "ao enviar formulário".
 function instalar() {
@@ -23,8 +26,12 @@ function instalar() {
   testarConexao();
 }
 
-// Confere se o token consegue acessar o repositório. Pode ser rodado a qualquer momento pelo editor.
+// Confere o serviço do Drive e se o token consegue acessar o repositório. Pode ser rodado a qualquer
+// momento pelo editor.
 function testarConexao() {
+  if (typeof Drive === 'undefined') {
+    throw new Error('Falta adicionar o serviço "Drive API" (menu Serviços, no editor). Veja automacao/README.md.');
+  }
   const resposta = UrlFetchApp.fetch('https://api.github.com/repos/' + REPO, {
     headers: cabecalhosGitHub(),
     muteHttpExceptions: true
@@ -53,7 +60,7 @@ function aoEnviar(e) {
 
     const arquivos = respostas[PERGUNTAS.imagem];
     if (!arquivos || !arquivos.length) throw new Error('Nenhuma imagem foi enviada.');
-    const blob = DriveApp.getFileById(arquivos[0]).getBlob();
+    const blob = imagemParaEnvio(arquivos[0]);
 
     const pendente = {
       categoria: respostas[PERGUNTAS.categoria],
@@ -86,6 +93,31 @@ function aoEnviar(e) {
       'O card não foi publicado.\n\nMotivo: ' + erro.message +
       '\n\nA resposta continua salva no formulário. Depois de corrigir, envie o formulário de novo.');
   }
+}
+
+// Versão JPG reduzida que o próprio Drive gera (a miniatura, pedida no tamanho LADO_ENVIO).
+// Logo após o upload ela pode ainda não existir: tenta por ~15 s e, se não vier, envia o original.
+function imagemParaEnvio(id) {
+  const original = DriveApp.getFileById(id);
+  try {
+    const cabecalho = { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() };
+    for (let tentativa = 0; tentativa < 5; tentativa++) {
+      const link = Drive.Files.get(id, { fields: 'thumbnailLink' }).thumbnailLink;
+      if (link) {
+        const resposta = UrlFetchApp.fetch(link.replace(/=s\d+$/, '=s' + LADO_ENVIO), {
+          headers: cabecalho,
+          muteHttpExceptions: true
+        });
+        if (resposta.getResponseCode() === 200) {
+          return resposta.getBlob().setName(original.getName().replace(/\.[^.]+$/, '') + '.jpg');
+        }
+      }
+      Utilities.sleep(3000);
+    }
+  } catch (erro) {
+    Logger.log('Miniatura indisponível, enviando o original: ' + erro.message);
+  }
+  return original.getBlob();
 }
 
 function cabecalhosGitHub() {

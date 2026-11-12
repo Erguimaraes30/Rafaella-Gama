@@ -101,7 +101,9 @@ Funções:
   5. Em qualquer erro (resposta não 2xx, token ausente, arquivo ilegível), envia e-mail ao dono do
      formulário com o título da matéria e a mensagem de erro. Nada é publicado.
 
-A imagem original permanece no Drive como backup.
+A imagem enviada é a miniatura que o Drive gera em JPG com até 1600px (`Drive.Files.get` →
+`thumbnailLink`, serviço avançado Drive API), o que converte HEIC e mantém o repositório leve; se
+ela não existir em ~15 s, vai o arquivo original. A imagem original permanece no Drive como backup.
 
 ## 4. Processamento (`scripts/processar-pendentes.mjs`)
 
