@@ -10,9 +10,33 @@ Só aceita envios de `enzorafael211205@gmail.com` e `sourafagama@gmail.com` (lis
 
 ## Configuração (uma vez)
 
-Pré-requisitos: o formulário criado com as perguntas `Categoria`, `Título`, `Subtítulo`, `Link` e
-`Imagem de capa` (títulos exatos) e e-mails coletados como **Verificado**; e um token fine-grained
-do GitHub só com acesso ao `Rafaella-Gama` e permissão **Contents: Read and write**.
+### Etapa 1 — criar o formulário
+
+1. Em https://forms.google.com, crie um formulário **Em branco** chamado `Novo card do portfólio`.
+2. **Configurações** → **Respostas** → **Coletar endereços de e-mail**: **Verificado**.
+3. Crie as perguntas. Os títulos e as opções precisam ser **exatamente** estes (com acento e
+   maiúsculas), porque o script procura as perguntas pelo título e as categorias pelo nome usado em
+   `src/data/portfolio.json`:
+
+   | Título da pergunta | Tipo | Configuração | Obrigatória |
+   |---|---|---|---|
+   | `Categoria` | Múltipla escolha | opções `Substack`, `Em Todo Lugar`, `Além do Hype`, `Coberturas` | sim |
+   | `Título` | Resposta curta | | sim |
+   | `Subtítulo` | Resposta curta | | não |
+   | `Link` | Resposta curta | ⋮ → Validação de resposta → Texto → URL | sim |
+   | `Imagem de capa` | Upload de arquivo | Permitir apenas tipos específicos → Imagem; máx. 1 arquivo; 10 MB | sim |
+
+4. Na pergunta `Imagem de capa`, ⋮ → **Descrição**: `JPG, PNG ou WebP (fotos HEIC do iPhone não
+   funcionam)`.
+
+### Etapa 2 — criar o token do GitHub
+
+1. https://github.com/settings/personal-access-tokens/new
+2. **Token name**: `Formulário portfólio`; **Expiration**: a maior data permitida.
+3. **Repository access**: **Only select repositories** → `Rafaella-Gama`.
+4. **Permissions** → **Repository permissions** → **Contents**: **Read and write**.
+5. **Generate token** e copie (começa com `github_pat_`; só aparece uma vez). Não cole o token em
+   nenhum arquivo do repositório.
 
 ### Etapa 3 — colar o script e guardar o token
 
@@ -53,9 +77,11 @@ Pronto. O link do formulário (botão **Enviar** → ícone de link) pode ser sa
 - **E-mail "[Portfólio] Falha ao enviar o card"**: o envio não chegou ao GitHub (token vencido,
   GitHub fora do ar…). Corrija o motivo indicado e envie o formulário de novo. Token vencido: gere um
   novo e troque o valor de `GITHUB_TOKEN` (Etapa 3, passos 5–6).
-- **E-mail do GitHub "Run failed: Novo card do formulário"**: o envio chegou, mas não foi
-  processado (categoria ou link inválido, imagem corrompida). O motivo está no log do passo
-  `processar`. O arquivo continua em `pendentes/`: corrija ou apague o arquivo e, na aba
-  **Actions** → **Novo card do formulário** → **Run workflow**, rode de novo.
+- **E-mail do GitHub "Run failed: Novo card do formulário"**: algum envio chegou, mas foi rejeitado
+  (categoria ou link inválido, imagem em formato não suportado como HEIC). Os outros envios são
+  publicados normalmente. O motivo está no log do passo `processar`, e o envio rejeitado fica em
+  `pendentes/rejeitados/`: apague esse arquivo pelo GitHub e envie o formulário de novo, corrigido.
+- **Formato da imagem**: use JPG, PNG ou WebP. Fotos do iPhone em HEIC não são aceitas; ao escolher
+  a foto pelo celular, o iPhone normalmente já converte para JPG.
 - **Renomeou uma pergunta do formulário?** O script procura as perguntas pelo título exato; volte
   ao nome original ou ajuste `PERGUNTAS` no `Codigo.gs`.

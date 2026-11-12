@@ -109,8 +109,10 @@ Script Node (ESM) executado pela Action, também rodável localmente com `node s
 
 Para cada `pendentes/*.json`, em ordem de nome (= ordem de envio):
 1. Valida: categoria existe no `portfolio.json`; `title`, `href` e `imagem.base64` presentes;
-   `href` começa com `http`. Se inválido, falha com mensagem clara e não altera nada.
-2. Imagem: decodifica o base64 e passa pelo `sharp`: corta bordas pretas uniformes (`trim`),
+   `href` começa com `http`; a imagem precisa ser legível (JPG, PNG ou WebP). Um pendente inválido é
+   movido para `pendentes/rejeitados/` com o motivo em stderr; os válidos seguem normalmente.
+2. Imagem: decodifica o base64 e passa pelo `sharp`: gira conforme o EXIF (`rotate`), corta bordas
+   pretas uniformes (`trim`),
    redimensiona para caber em 1000×1000 sem ampliar, salva `.webp` com qualidade 80 em
    `public/portfolio/<pasta>/<slug>.webp`. O slug vem do título (minúsculas, sem acento, palavras
    separadas por hífen, até ~40 caracteres); se o arquivo existir, acrescenta `-2`, `-3`...
@@ -118,7 +120,8 @@ Para cada `pendentes/*.json`, em ordem de nome (= ordem de envio):
    conforme `novas`.
 4. Grava o `portfolio.json` (indentação de 2 espaços) e apaga o pendente.
 
-Imprime os títulos processados para o log e para a mensagem de commit.
+Tudo é validado e convertido em memória antes de gravar. Imprime os títulos publicados (stdout)
+para o log e a mensagem de commit; sai com código 2 quando houve rejeitados.
 
 `sharp` entra em `devDependencies`.
 
@@ -133,8 +136,10 @@ Imprime os títulos processados para o log e para a mensagem de commit.
 - Pushes feitos com `GITHUB_TOKEN` não disparam outros workflows, por isso o deploy é disparado
   explicitamente; o próprio commit da Action também não redispara este workflow.
 
-Em falha: o GitHub notifica por e-mail o dono do repositório; o pendente continua em `pendentes/`
-e pode ser reprocessado com "Run workflow".
+Com rejeitados: os válidos são publicados, o movimento para `pendentes/rejeitados/` entra no commit
+e o último passo falha, para o GitHub notificar o dono do repositório por e-mail. O usuário apaga o
+rejeitado e reenvia o formulário. Em outras falhas o pendente continua em `pendentes/` e pode ser
+reprocessado com "Run workflow".
 
 ## Testes
 

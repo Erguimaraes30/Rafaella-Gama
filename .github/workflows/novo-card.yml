@@ -30,12 +30,22 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      # Código 2 = algum envio foi rejeitado (movido para pendentes/rejeitados/); os válidos seguem
+      # para o commit e o último passo falha, para o GitHub avisar por e-mail.
       - id: processar
         run: |
+          set +e
+          node scripts/processar-pendentes.mjs > "$RUNNER_TEMP/titulos.txt" 2> "$RUNNER_TEMP/rejeitados.txt"
+          codigo=$?
+          set -e
+          cat "$RUNNER_TEMP/titulos.txt"
+          cat "$RUNNER_TEMP/rejeitados.txt" >&2
+          if [ "$codigo" -ne 0 ] && [ "$codigo" -ne 2 ]; then exit "$codigo"; fi
           {
             echo 'titulos<<FIM_TITULOS'
-            node scripts/processar-pendentes.mjs
+            cat "$RUNNER_TEMP/titulos.txt"
             echo 'FIM_TITULOS'
+            echo "rejeitados=$([ "$codigo" -eq 2 ] && echo sim || echo nao)"
           } >> "$GITHUB_OUTPUT"
       - run: npm run build
       - name: Commit e deploy
@@ -50,8 +60,17 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A public/portfolio src/data/portfolio.json pendentes
-          git commit -m "Adiciona card: $(echo "$TITULOS" | paste -sd ';' | sed 's/;/; /g')"
+          if [ -n "$TITULOS" ]; then
+            git commit -m "Adiciona card: $(printf '%s\n' "$TITULOS" | paste -sd ';' | sed 's/;/; /g')"
+          else
+            git commit -m 'Move envio rejeitado para pendentes/rejeitados'
+          fi
           git pull --rebase origin main
           git push origin HEAD:main
           # Pushes feitos com o GITHUB_TOKEN não disparam outros workflows, então o deploy é chamado aqui.
-          gh workflow run deploy.yml --ref main
+          if [ -n "$TITULOS" ]; then gh workflow run deploy.yml --ref main; fi
+      - name: Falha se algum envio foi rejeitado
+        if: steps.processar.outputs.rejeitados == 'sim'
+        run: |
+          echo 'Envio rejeitado (motivo no passo "processar"). O arquivo está em pendentes/rejeitados/: apague-o e envie o formulário de novo.'
+          exit 1

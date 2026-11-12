@@ -62,9 +62,10 @@ test('slugify limita a 40 caracteres sem hífen no fim', () => {
 test('insere no início quando novas = inicio', async () => {
   const raiz = criarRaiz();
   await gravarPendente(raiz, '2026-11-12T15-30-00-nova.json', {});
-  const titulos = await processarPendentes({ raiz });
+  const { titulos, rejeitados } = await processarPendentes({ raiz });
   const { trabalhos } = categoria(raiz, 'Em Todo Lugar');
   assert.deepEqual(titulos, ['Nova matéria']);
+  assert.deepEqual(rejeitados, []);
   assert.equal(trabalhos.length, 2);
   assert.equal(trabalhos[0].title, 'Nova matéria');
   assert.equal(trabalhos[0].href, 'https://exemplo.com/nova');
@@ -165,29 +166,65 @@ test('apaga os pendentes processados', async () => {
 test('sem pendentes não altera nada e devolve lista vazia', async () => {
   const raiz = criarRaiz();
   const antes = fs.readFileSync(path.join(raiz, 'src/data/portfolio.json'));
-  assert.deepEqual(await processarPendentes({ raiz }), []);
+  assert.deepEqual(await processarPendentes({ raiz }), { titulos: [], rejeitados: [] });
   assert.deepEqual(fs.readFileSync(path.join(raiz, 'src/data/portfolio.json')), antes);
 });
 
-test('pendente inválido não altera nada', async () => {
+test('pendente inválido vai para rejeitados e não impede os válidos', async () => {
   const raiz = criarRaiz();
-  const antes = fs.readFileSync(path.join(raiz, 'src/data/portfolio.json'));
   await gravarPendente(raiz, 'a.json', { title: 'Válida' });
   await gravarPendente(raiz, 'b.json', { categoria: 'Inexistente' });
-  await assert.rejects(processarPendentes({ raiz }), /Inexistente/);
+  const { titulos, rejeitados } = await processarPendentes({ raiz });
+  assert.deepEqual(titulos, ['Válida']);
+  assert.equal(rejeitados.length, 1);
+  assert.equal(rejeitados[0].arquivo, 'b.json');
+  assert.match(rejeitados[0].motivo, /Inexistente/);
+  assert.equal(categoria(raiz, 'Em Todo Lugar').trabalhos[0].title, 'Válida');
+  assert.ok(fs.existsSync(path.join(raiz, 'pendentes/rejeitados/b.json')));
+  assert.deepEqual(fs.readdirSync(path.join(raiz, 'pendentes')), ['rejeitados']);
+});
+
+test('só pendentes inválidos não altera os dados nem cria imagens', async () => {
+  const raiz = criarRaiz();
+  const antes = fs.readFileSync(path.join(raiz, 'src/data/portfolio.json'));
+  await gravarPendente(raiz, 'a.json', { categoria: 'Inexistente' });
+  const { titulos } = await processarPendentes({ raiz });
+  assert.deepEqual(titulos, []);
   assert.deepEqual(fs.readFileSync(path.join(raiz, 'src/data/portfolio.json')), antes);
   assert.ok(!fs.existsSync(path.join(raiz, 'public')));
-  assert.deepEqual(fs.readdirSync(path.join(raiz, 'pendentes')).sort(), ['a.json', 'b.json']);
 });
 
 test('href sem http é inválido', async () => {
   const raiz = criarRaiz();
   await gravarPendente(raiz, 'a.json', { href: 'exemplo.com/sem-protocolo' });
-  await assert.rejects(processarPendentes({ raiz }), /link/i);
+  const { rejeitados } = await processarPendentes({ raiz });
+  assert.match(rejeitados[0].motivo, /link/i);
 });
 
 test('título vazio é inválido', async () => {
   const raiz = criarRaiz();
   await gravarPendente(raiz, 'a.json', { title: '   ' });
-  await assert.rejects(processarPendentes({ raiz }), /título/i);
+  const { rejeitados } = await processarPendentes({ raiz });
+  assert.match(rejeitados[0].motivo, /título/i);
+});
+
+test('imagem em formato não suportado é rejeitada pedindo JPG, PNG ou WebP', async () => {
+  const raiz = criarRaiz();
+  await gravarPendente(raiz, 'a.json', { title: 'HEIC' }, Buffer.from('isto não é uma imagem'));
+  const { titulos, rejeitados } = await processarPendentes({ raiz });
+  assert.deepEqual(titulos, []);
+  assert.match(rejeitados[0].motivo, /JPG, PNG ou WebP/);
+  assert.ok(fs.existsSync(path.join(raiz, 'pendentes/rejeitados/a.json')));
+});
+
+test('foto de celular é girada conforme a orientação EXIF', async () => {
+  const raiz = criarRaiz();
+  // 200×100 gravada com orientação 6 (girar 90°): deve aparecer em pé, 100×200.
+  const deLado = await sharp({ create: { width: 200, height: 100, channels: 3, background: { r: 200, g: 50, b: 50 } } })
+    .jpeg().withMetadata({ orientation: 6 }).toBuffer();
+  await gravarPendente(raiz, 'a.json', { title: 'Celular' }, deLado);
+  await processarPendentes({ raiz });
+  const meta = await sharp(path.join(raiz, 'public/portfolio/emtodolugar/celular.webp')).metadata();
+  assert.equal(meta.width, 100);
+  assert.equal(meta.height, 200);
 });
