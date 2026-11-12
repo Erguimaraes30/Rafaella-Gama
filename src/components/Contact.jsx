@@ -41,7 +41,6 @@ export default function Contact() {
       <div className="contact__bg" aria-hidden="true">
         <Suspense fallback={null}>
           <MicroSlats
-            preset="tide"
             color="#b39469"
             glintColor="#fff1a6"
             backgroundColor="#fbf3e4"

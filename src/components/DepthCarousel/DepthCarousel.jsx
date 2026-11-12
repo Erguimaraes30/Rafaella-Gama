@@ -24,19 +24,15 @@ const DepthCarousel = ({
   depth = 220,
   spread = 90,
   tilt = 22,
-  tiltDirection = 'right',
   perspective = 1400,
   visibleCards = 4,
   falloff = 0.2,
   blur = 6,
   duration = 700,
   ease = 'power3.out',
-  autoplay = false,
-  autoplayDelay = 3200,
   loop = true,
   showControls = true,
   showIndicators = true,
-  onChange,
   className = '',
   ariaLabel = 'Carrossel'
 }) => {
@@ -53,12 +49,10 @@ const DepthCarousel = ({
   const tweenRef = useRef(null);
   const scaleRef = useRef(1);
   const cfgRef = useRef({});
-  const onChangeRef = useRef(onChange);
 
   const dragRef = useRef(null);
   const draggedRef = useRef(false);
   const wheelTimerRef = useRef(null);
-  const autoTimerRef = useRef(null);
   const reducedRef = useRef(false);
 
   const [active, setActive] = useState(0);
@@ -68,28 +62,24 @@ const DepthCarousel = ({
   const [, atualizarCarregadas] = useReducer(x => x + 1, 0);
   for (const i of indicesProximos(active, count, visibleCards + 2, loop)) carregadasRef.current.add(i);
 
-  onChangeRef.current = onChange;
   cfgRef.current = {
     count,
     depth,
     spread,
     tilt,
-    tiltDirection,
     visibleCards,
     falloff,
     blur,
     duration,
     ease,
     loop,
-    cardWidth,
-    autoplayDelay
+    cardWidth
   };
 
   const layout = useCallback(pos => {
     const cfg = cfgRef.current;
     const n = cfg.count;
     if (!n) return;
-    const dir = cfg.tiltDirection === 'left' ? -1 : 1;
     const sc = scaleRef.current;
     let faltouImagem = false;
 
@@ -120,8 +110,8 @@ const DepthCarousel = ({
       }
 
       const tz = -cfg.depth * d;
-      const tx = dir * cfg.spread * d;
-      const ry = dir * cfg.tilt * clamp(d, 0, 1);
+      const tx = cfg.spread * d;
+      const ry = cfg.tilt * clamp(d, 0, 1);
 
       const opacity = d < 0 ? Math.max(0, 1 + d) : 1;
 
@@ -140,14 +130,6 @@ const DepthCarousel = ({
     }
     if (faltouImagem) atualizarCarregadas();
   }, []);
-
-  const notify = useCallback(
-    idx => {
-      setActive(idx);
-      onChangeRef.current?.(idx, data[idx]);
-    },
-    [data]
-  );
 
   const tweenTo = useCallback(
     (target, animate) => {
@@ -187,10 +169,10 @@ const DepthCarousel = ({
       tweenTo(posRef.current + delta, animate);
       if (idx !== focusRef.current) {
         focusRef.current = idx;
-        notify(idx);
+        setActive(idx);
       }
     },
-    [tweenTo, notify]
+    [tweenTo]
   );
 
   const navigateBy = useCallback(step => setFocus(focusRef.current + step, true), [setFocus]);
@@ -305,59 +287,17 @@ const DepthCarousel = ({
   );
 
   useEffect(() => {
-    reducedRef.current = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!autoplay || reducedRef.current || count < 2) return;
-    const root = rootRef.current;
-    let hovered = false;
-    let focused = false;
-    const stop = () => {
-      if (autoTimerRef.current) clearInterval(autoTimerRef.current);
-      autoTimerRef.current = null;
-    };
-    const start = () => {
-      stop();
-      autoTimerRef.current = window.setInterval(
-        () => {
-          if (!hovered && !focused) navigateBy(1);
-        },
-        Math.max(cfgRef.current.autoplayDelay, 600)
-      );
-    };
-    const onEnter = () => {
-      hovered = true;
-    };
-    const onLeave = () => {
-      hovered = false;
-    };
-    const onFocusIn = () => {
-      focused = true;
-    };
-    const onFocusOut = () => {
-      focused = false;
-    };
-    root?.addEventListener('mouseenter', onEnter);
-    root?.addEventListener('mouseleave', onLeave);
-    root?.addEventListener('focusin', onFocusIn);
-    root?.addEventListener('focusout', onFocusOut);
-    start();
-    return () => {
-      stop();
-      root?.removeEventListener('mouseenter', onEnter);
-      root?.removeEventListener('mouseleave', onLeave);
-      root?.removeEventListener('focusin', onFocusIn);
-      root?.removeEventListener('focusout', onFocusOut);
-    };
-  }, [autoplay, autoplayDelay, count, navigateBy]);
+    reducedRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, []);
 
   useEffect(() => {
     layout(posRef.current);
-  }, [layout, depth, spread, tilt, tiltDirection, visibleCards, falloff, blur, cardWidth, cardHeight, radius, count]);
+  }, [layout, depth, spread, tilt, visibleCards, falloff, blur, cardWidth, cardHeight, radius, count]);
 
   useEffect(
     () => () => {
       tweenRef.current?.kill();
       if (wheelTimerRef.current) clearTimeout(wheelTimerRef.current);
-      if (autoTimerRef.current) clearInterval(autoTimerRef.current);
     },
     []
   );

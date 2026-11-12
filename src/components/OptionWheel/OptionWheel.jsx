@@ -36,8 +36,6 @@ const OptionWheel = ({
   inset = 80,
   loop = false,
   draggable = true,
-  soundUrl = '',
-  soundVolume = 0.5,
   className = '',
   ariaLabel = 'Option wheel',
   scrollable = true
@@ -54,9 +52,6 @@ const OptionWheel = ({
   const wheelTimerRef = useRef(null);
   const dragRef = useRef(null);
   const dragMovedRef = useRef(false);
-  const audioRef = useRef(null);
-  const audioUrlRef = useRef('');
-  const lastTickRef = useRef(0);
   const [selectedIndex, setSelectedIndex] = useState(defaultSelected);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -75,9 +70,7 @@ const OptionWheel = ({
     side,
     loop,
     smoothing,
-    draggable,
-    soundUrl,
-    soundVolume
+    draggable
   };
 
   // Single rAF loop that eases the wheel position toward its target with
@@ -139,25 +132,6 @@ const OptionWheel = ({
     rafRef.current = requestAnimationFrame(runFrame);
   }, [runFrame]);
 
-  // Optional tick on selection change, throttled so fast scrolling can't spam
-  // it, and with playback failures (e.g. autoplay policies) silently ignored.
-  const playTick = useCallback(() => {
-    const { soundUrl, soundVolume } = cfgRef.current;
-    if (!soundUrl) return;
-    const now = performance.now();
-    if (now - lastTickRef.current < 70) return;
-    lastTickRef.current = now;
-    if (!audioRef.current || audioUrlRef.current !== soundUrl) {
-      audioRef.current = new Audio(soundUrl);
-      audioRef.current.preload = 'auto';
-      audioUrlRef.current = soundUrl;
-    }
-    const audio = audioRef.current;
-    audio.volume = Math.min(Math.max(soundVolume, 0), 1);
-    audio.currentTime = 0;
-    audio.play()?.catch(() => {});
-  }, []);
-
   const applyTarget = useCallback(
     (value, snap) => {
       const cfg = cfgRef.current;
@@ -170,11 +144,10 @@ const OptionWheel = ({
         selectedRef.current = idx;
         setSelectedIndex(idx);
         onChangeRef.current?.(idx, cfg.items[idx]);
-        playTick();
       }
       startLoop();
     },
-    [startLoop, playTick]
+    [startLoop]
   );
 
   // Wheel / touchpad scrolling, registered manually so it can be non-passive.
@@ -268,7 +241,6 @@ const OptionWheel = ({
     () => () => {
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
-      audioRef.current?.pause();
     },
     []
   );

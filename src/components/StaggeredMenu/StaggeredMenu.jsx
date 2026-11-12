@@ -27,9 +27,7 @@ export const StaggeredMenu = ({
   closeLabel = 'Close',
   socialsTitle = 'Socials',
   ariaLabel = 'Main navigation header',
-  onItemClick,
-  onMenuOpen,
-  onMenuClose
+  onItemClick
 }) => {
   const [open, setOpen] = useState(false);
   const openRef = useRef(false);
@@ -320,29 +318,23 @@ export const StaggeredMenu = ({
     const target = !openRef.current;
     openRef.current = target;
     setOpen(target);
-    if (target) {
-      onMenuOpen?.();
-      playOpen();
-    } else {
-      onMenuClose?.();
-      playClose();
-    }
+    if (target) playOpen();
+    else playClose();
     animateIcon(target);
     animateColor(target);
     animateText(target);
-  }, [playOpen, playClose, animateIcon, animateColor, animateText, onMenuOpen, onMenuClose]);
+  }, [playOpen, playClose, animateIcon, animateColor, animateText]);
 
   const closeMenu = useCallback(() => {
     if (openRef.current) {
       openRef.current = false;
       setOpen(false);
-      onMenuClose?.();
       playClose();
       animateIcon(false);
       animateColor(false);
       animateText(false);
     }
-  }, [playClose, animateIcon, animateColor, animateText, onMenuClose]);
+  }, [playClose, animateIcon, animateColor, animateText]);
 
   React.useEffect(() => {
     if (!closeOnClickAway || !open) return;
