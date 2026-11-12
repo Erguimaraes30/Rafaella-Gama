@@ -54,6 +54,21 @@ export const PORTFOLIO = [
     logo: true,
     trabalhos: [
       {
+        title: 'Reportagem e edição para o portal Em Todo Lugar',
+        href: 'https://www.instagram.com/reel/DfkDjK7xn3j/',
+        image: withBase('/portfolio/emtodolugar/reportagem-emtodolugar.webp')
+      },
+      {
+        title: 'FLIM: ponto de encontro de escritores, artistas e milhares de leitores de todas as idades',
+        href: 'https://emtodolugar.facha.edu.br/2026/11/07/flim-ponto-de-encontro-de-escritores-artistas-e-milhares-de-leitores-de-todas-as-idades/',
+        image: withBase('/portfolio/emtodolugar/flim.webp')
+      },
+      {
+        title: 'Dia nacional da leitura: ler deixou de ser casual e virou apenas performance?',
+        href: 'https://emtodolugar.facha.edu.br/2026/10/29/dia-nacional-da-leitura-ler-deixou-de-ser-casual-e-virou-apenas-performancedia-nacional-da-leitura-ler-deixou-de-ser-casual-e-virou-apenas-performance/',
+        image: withBase('/portfolio/emtodolugar/dianacionaldaleitura.webp')
+      },
+      {
         title: 'Victoria’s Secret Fashion Show 2026: veja os destaques do desfile',
         href: 'https://emtodolugar.facha.edu.br/2026/10/20/victorias-secret-fashion-show-2026-veja-os-destaques-do-desfile/',
         image: withBase('/portfolio/emtodolugar/victoriasecretfashionshow_moda.webp')
@@ -130,6 +145,23 @@ export const PORTFOLIO = [
         subtitle: 'Colaborações musicais que pararam o mundo do entretenimento',
         href: 'https://emtodolugar.facha.edu.br/2026/10/16/4-alem-do-hype/',
         image: withBase('/portfolio/alemdohype/materia4alem.webp')
+      },
+      {
+        title: 'Um mês de #ADH: nossas obsessões do momento',
+        href: 'https://emtodolugar.facha.edu.br/2026/10/23/um-mes-de-adh-nossas-obsessoes-do-momento/',
+        image: withBase('/portfolio/alemdohype/ummesadh.webp')
+      },
+      {
+        title: '#5 Além do Hype',
+        subtitle: 'Filmes de terror para você maratonar nesse Halloween',
+        href: 'https://emtodolugar.facha.edu.br/2026/10/29/5-alem-do-hype/',
+        image: withBase('/portfolio/alemdohype/materia5alem.webp')
+      },
+      {
+        title: '#6 Além do Hype',
+        subtitle: 'Atores e atrizes que também cantam e você não sabia',
+        href: 'https://emtodolugar.facha.edu.br/2026/11/06/6-alem-do-hype-atores-e-atrizes-que-tambem-cantam-e-voce-nao-sabia/',
+        image: withBase('/portfolio/alemdohype/materia6alem.webp')
       }
     ]
   },
@@ -138,6 +170,11 @@ export const PORTFOLIO = [
     cor: 'yellow',
     capa: withBase('/retrato-sobremim.webp'),
     trabalhos: [
+      {
+        title: 'Cobertura do evento UNIFACHA Festival',
+        href: 'https://www.instagram.com/reel/DfmoctZRmpX/',
+        image: withBase('/portfolio/coberturas/unifachafestival.webp')
+      },
       {
         title:
           'Cerimônia de posse do auditor fiscal Júlio César Carvalho de Araújo como novo chefe da Alfândega da Receita Federal no Aeroporto Internacional do Rio de Janeiro',
