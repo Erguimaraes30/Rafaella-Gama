@@ -54,11 +54,6 @@ export const PORTFOLIO = [
     logo: true,
     trabalhos: [
       {
-        title: 'Reportagem e edição para o portal Em Todo Lugar',
-        href: 'https://www.instagram.com/reel/DfkDjK7xn3j/',
-        image: withBase('/portfolio/emtodolugar/reportagem-emtodolugar.webp')
-      },
-      {
         title: 'FLIM: ponto de encontro de escritores, artistas e milhares de leitores de todas as idades',
         href: 'https://emtodolugar.facha.edu.br/2026/11/07/flim-ponto-de-encontro-de-escritores-artistas-e-milhares-de-leitores-de-todas-as-idades/',
         image: withBase('/portfolio/emtodolugar/flim.webp')
@@ -174,6 +169,11 @@ export const PORTFOLIO = [
         title: 'Cobertura do evento UNIFACHA Festival',
         href: 'https://www.instagram.com/reel/DfmoctZRmpX/',
         image: withBase('/portfolio/coberturas/unifachafestival.webp')
+      },
+      {
+        title: 'Reportagem e edição para o portal Em Todo Lugar',
+        href: 'https://www.instagram.com/reel/DfkDjK7xn3j/',
+        image: withBase('/portfolio/coberturas/reportagem-emtodolugar.webp')
       },
       {
         title:
