@@ -173,11 +173,6 @@
     "novas": "inicio",
     "trabalhos": [
       {
-        "title": "Teste automação",
-        "href": "https://example.com",
-        "image": "/portfolio/coberturas/teste-automacao.webp"
-      },
-      {
         "title": "Cobertura do evento UNIFACHA Festival",
         "href": "https://www.instagram.com/reel/DfmoctZRmpX/",
         "image": "/portfolio/coberturas/unifachafestival.webp"
