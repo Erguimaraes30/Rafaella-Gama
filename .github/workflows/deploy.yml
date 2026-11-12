@@ -3,6 +3,8 @@ name: Deploy no GitHub Pages
 on:
   push:
     branches: [main]
+    # Envios do formulário não mudam o site; o novo-card.yml dispara o deploy depois de processá-los.
+    paths-ignore: ['pendentes/**']
   workflow_dispatch:
 
 permissions:
