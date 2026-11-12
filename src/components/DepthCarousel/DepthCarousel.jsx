@@ -1,11 +1,15 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import gsap from 'gsap';
+import { distancia, indicesProximos } from './janela';
 import './DepthCarousel.css';
 
 // Ajustes do projeto: sem imagens de exemplo, rótulos de acessibilidade em português e
 // slides com título (`title`) e link (`href`) opcionais — o link só vale no card em foco.
+// Para categorias com muitos cards: só as imagens perto do foco são baixadas (as demais conforme
+// o carrossel avança), e os cards fora de vista ficam com display: none, sem camada na GPU nem
+// atualização por quadro.
 const DEFAULT_ITEMS = [];
 
 const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
@@ -58,6 +62,11 @@ const DepthCarousel = ({
   const reducedRef = useRef(false);
 
   const [active, setActive] = useState(0);
+  // Índices cujas imagens já podem ser baixadas; só cresce, para não piscar ao voltar.
+  const carregadasRef = useRef(new Set());
+  const ocultosRef = useRef([]);
+  const [, atualizarCarregadas] = useReducer(x => x + 1, 0);
+  for (const i of indicesProximos(active, count, visibleCards + 2, loop)) carregadasRef.current.add(i);
 
   onChangeRef.current = onChange;
   cfgRef.current = {
@@ -82,27 +91,39 @@ const DepthCarousel = ({
     if (!n) return;
     const dir = cfg.tiltDirection === 'left' ? -1 : 1;
     const sc = scaleRef.current;
+    let faltouImagem = false;
 
     for (let i = 0; i < n; i++) {
       const el = cardRefs.current[i];
       if (!el) continue;
 
-      let d = i - pos;
-      if (cfg.loop && n > 1) {
-        d = ((d % n) + n) % n;
-        if (d > n / 2) d -= n;
-      }
-
+      const d = distancia(i, pos, n, cfg.loop);
       const back = Math.max(0, d);
       const az = Math.abs(d);
-      const shown = az <= cfg.visibleCards + 0.5;
+      const shown = az <= cfg.visibleCards + 0.5 && d > -1;
+
+      if (!shown) {
+        if (!ocultosRef.current[i]) {
+          el.style.display = 'none';
+          ocultosRef.current[i] = true;
+        }
+        continue;
+      }
+      if (ocultosRef.current[i]) {
+        el.style.display = '';
+        ocultosRef.current[i] = false;
+      }
+      // Arrastando rápido, um card pode aparecer antes de o foco chegar perto dele.
+      if (!carregadasRef.current.has(i)) {
+        carregadasRef.current.add(i);
+        faltouImagem = true;
+      }
 
       const tz = -cfg.depth * d;
       const tx = dir * cfg.spread * d;
       const ry = dir * cfg.tilt * clamp(d, 0, 1);
 
-      let opacity = d < 0 ? Math.max(0, 1 + d) : 1;
-      if (!shown) opacity = 0;
+      const opacity = d < 0 ? Math.max(0, 1 + d) : 1;
 
       const brightness = Math.max(0.15, 1 - back * cfg.falloff);
       const blurPx = cfg.blur > 0 ? Math.min(cfg.blur, (back / Math.max(1, cfg.visibleCards)) * cfg.blur) : 0;
@@ -112,11 +133,12 @@ const DepthCarousel = ({
       el.style.opacity = opacity.toFixed(3);
       el.style.filter = `brightness(${brightness.toFixed(3)}) blur(${blurPx.toFixed(2)}px)`;
       el.style.zIndex = String(zi);
-      el.style.pointerEvents = shown && opacity > 0.05 ? 'auto' : 'none';
+      el.style.pointerEvents = opacity > 0.05 ? 'auto' : 'none';
 
       const ov = overlayRefs.current[i];
       if (ov) ov.style.opacity = clamp(back * cfg.falloff * 1.25, 0, 0.86).toFixed(3);
     }
+    if (faltouImagem) atualizarCarregadas();
   }, []);
 
   const notify = useCallback(
@@ -356,51 +378,58 @@ const DepthCarousel = ({
       onKeyDown={onKeyDown}
     >
       <div className="depth-carousel__stage" ref={stageRef}>
-        {data.map((item, i) => (
-          <div
-            key={i}
-            className="depth-carousel__card"
-            ref={el => (cardRefs.current[i] = el)}
-            style={{ width: cardWidth, height: cardHeight, borderRadius: radius }}
-            aria-roledescription="slide"
-            aria-label={`${i + 1} de ${count}`}
-            aria-hidden={active !== i}
-            onClick={() => onCardClick(i)}
-          >
-            {item.title ? (
-              <>
-                <span className="depth-carousel__media">
-                  <img className="depth-carousel__backdrop" src={item.image} alt="" draggable={false} decoding="async" />
-                  <img className="depth-carousel__img" src={item.image} alt={item.alt || ''} draggable={false} decoding="async" />
-                </span>
-                <span className="depth-carousel__text">
-                  <span className="depth-carousel__title">{item.title}</span>
-                  {item.subtitle && <span className="depth-carousel__subtitle">{item.subtitle}</span>}
-                </span>
-              </>
-            ) : (
-              <img className="depth-carousel__img" src={item.image} alt={item.alt || ''} draggable={false} decoding="async" />
-            )}
-            {item.href && (
-              <a
-                className="depth-carousel__link"
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                tabIndex={active === i ? 0 : -1}
-                aria-label={item.title ? `${item.subtitle ? `${item.title}: ${item.subtitle}` : item.title} (abre em nova aba)` : 'Abrir (nova aba)'}
-                onClick={e => {
-                  if (active !== i || draggedRef.current) e.preventDefault();
-                }}
+        {data.map((item, i) => {
+          const comImagem = carregadasRef.current.has(i);
+          return (
+            <div
+              key={i}
+              className="depth-carousel__card"
+              ref={el => (cardRefs.current[i] = el)}
+              style={{ width: cardWidth, height: cardHeight, borderRadius: radius }}
+              aria-roledescription="slide"
+              aria-label={`${i + 1} de ${count}`}
+              aria-hidden={active !== i}
+              onClick={() => onCardClick(i)}
+            >
+              {item.title ? (
+                <>
+                  <span className="depth-carousel__media">
+                    {comImagem && (
+                      <>
+                        <img className="depth-carousel__backdrop" src={item.image} alt="" draggable={false} decoding="async" />
+                        <img className="depth-carousel__img" src={item.image} alt={item.alt || ''} draggable={false} decoding="async" />
+                      </>
+                    )}
+                  </span>
+                  <span className="depth-carousel__text">
+                    <span className="depth-carousel__title">{item.title}</span>
+                    {item.subtitle && <span className="depth-carousel__subtitle">{item.subtitle}</span>}
+                  </span>
+                </>
+              ) : (
+                comImagem && <img className="depth-carousel__img" src={item.image} alt={item.alt || ''} draggable={false} decoding="async" />
+              )}
+              {item.href && (
+                <a
+                  className="depth-carousel__link"
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  tabIndex={active === i ? 0 : -1}
+                  aria-label={item.title ? `${item.subtitle ? `${item.title}: ${item.subtitle}` : item.title} (abre em nova aba)` : 'Abrir (nova aba)'}
+                  onClick={e => {
+                    if (active !== i || draggedRef.current) e.preventDefault();
+                  }}
+                />
+              )}
+              <span
+                className="depth-carousel__tint"
+                ref={el => (overlayRefs.current[i] = el)}
+                style={{ background: tint }}
               />
-            )}
-            <span
-              className="depth-carousel__tint"
-              ref={el => (overlayRefs.current[i] = el)}
-              style={{ background: tint }}
-            />
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </div>
 
       {showControls && count > 1 && (
