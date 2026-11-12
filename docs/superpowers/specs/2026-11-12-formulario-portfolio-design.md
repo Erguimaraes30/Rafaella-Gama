@@ -103,7 +103,7 @@ Funções:
 
 A imagem enviada é a miniatura que o Drive gera em JPG com até 1600px (`Drive.Files.get` →
 `thumbnailLink`, serviço avançado Drive API), o que converte HEIC e mantém o repositório leve; se
-ela não existir em ~15 s, vai o arquivo original. A imagem original permanece no Drive como backup.
+ela não existir em ~90 s, vai o arquivo original. A imagem original permanece no Drive como backup.
 
 ## 4. Processamento (`scripts/processar-pendentes.mjs`)
 

@@ -96,12 +96,13 @@ function aoEnviar(e) {
 }
 
 // Versão JPG reduzida que o próprio Drive gera (a miniatura, pedida no tamanho LADO_ENVIO).
-// Logo após o upload ela pode ainda não existir: tenta por ~15 s e, se não vier, envia o original.
+// Logo após o upload o Drive pode levar um tempo para gerá-la: tenta por até ~90 s (o gatilho pode
+// rodar por 6 min) e, se não vier, envia o original.
 function imagemParaEnvio(id) {
   const original = DriveApp.getFileById(id);
   try {
     const cabecalho = { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() };
-    for (let tentativa = 0; tentativa < 5; tentativa++) {
+    for (let tentativa = 0; tentativa < 18; tentativa++) {
       const link = Drive.Files.get(id, { fields: 'thumbnailLink' }).thumbnailLink;
       if (link) {
         const resposta = UrlFetchApp.fetch(link.replace(/=s\d+$/, '=s' + LADO_ENVIO), {
@@ -111,13 +112,50 @@ function imagemParaEnvio(id) {
         if (resposta.getResponseCode() === 200) {
           return resposta.getBlob().setName(original.getName().replace(/\.[^.]+$/, '') + '.jpg');
         }
+        Logger.log('Tentativa ' + (tentativa + 1) + ': miniatura respondeu ' + resposta.getResponseCode());
+      } else {
+        Logger.log('Tentativa ' + (tentativa + 1) + ': o Drive ainda não tem miniatura');
       }
-      Utilities.sleep(3000);
+      Utilities.sleep(5000);
     }
+    Logger.log('Miniatura indisponível, enviando o original.');
   } catch (erro) {
     Logger.log('Miniatura indisponível, enviando o original: ' + erro.message);
   }
   return original.getBlob();
+}
+
+// Diagnóstico: mostra no registro como o Drive responde para a imagem do último envio do formulário.
+// Não envia nada ao GitHub. Rodar pelo editor quando a imagem chegar sem ser reduzida.
+function diagnosticarImagem() {
+  const respostas = FormApp.getActiveForm().getResponses();
+  const ultima = respostas[respostas.length - 1];
+  const item = ultima.getItemResponses().find(r => r.getItem().getTitle() === PERGUNTAS.imagem);
+  const id = item.getResponse()[0];
+  const arquivo = DriveApp.getFileById(id);
+  Logger.log('Arquivo: ' + arquivo.getName() + ' | ' + arquivo.getMimeType() + ' | ' + Math.round(arquivo.getSize() / 1024) + ' KB');
+  const info = Drive.Files.get(id, { fields: 'thumbnailLink,hasThumbnail,mimeType' });
+  Logger.log('Drive.Files.get: ' + JSON.stringify(info));
+  const token = ScriptApp.getOAuthToken();
+  const testar = (nome, url, comToken) => {
+    try {
+      const r = UrlFetchApp.fetch(url, {
+        headers: comToken ? { Authorization: 'Bearer ' + token } : {},
+        muteHttpExceptions: true,
+        followRedirects: true
+      });
+      Logger.log(nome + ': ' + r.getResponseCode() + ' | ' + (r.getHeaders()['Content-Type'] || '?') + ' | ' + Math.round(r.getContent().length / 1024) + ' KB');
+    } catch (erro) {
+      Logger.log(nome + ': erro ' + erro.message);
+    }
+  };
+  if (info.thumbnailLink) {
+    testar('miniatura original com token', info.thumbnailLink, true);
+    testar('miniatura grande com token', info.thumbnailLink.replace(/=s\d+$/, '=s' + LADO_ENVIO), true);
+    testar('miniatura grande sem token', info.thumbnailLink.replace(/=s\d+$/, '=s' + LADO_ENVIO), false);
+    Logger.log('Final do link: ' + info.thumbnailLink.slice(-30));
+  }
+  testar('drive.google.com/thumbnail', 'https://drive.google.com/thumbnail?id=' + id + '&sz=w' + LADO_ENVIO, true);
 }
 
 function cabecalhosGitHub() {
